@@ -24,8 +24,26 @@ from utils.rclone_helper import upload_files
 import requests
 from streamlit_cookies_manager import EncryptedCookieManager
 import threading
+import base64
 
 dotenv.load_dotenv()
+
+def setup_rclone():
+    # 1. Get the base64 string from secrets
+    encoded_conf = os.getenv("RCLONE_CONF_CONTENT")
+    
+    # 2. Decode the string
+    decoded_conf = base64.b64decode(encoded_conf).decode("utf-8")
+    
+    # 3. Path to save the config (Linux /tmp is best for Streamlit Cloud)
+    config_path = "/tmp/rclone.conf"
+    
+    with open(config_path, "w") as f:
+        f.write(decoded_conf)
+    
+    os.environ["RCLONE_CONFIG"] = config_path
+    
+    return config_path
 
 # # Import your existing modules
 # from segmentation.webrtc_dialogue_segmentation import segment_dialogue
@@ -40,6 +58,8 @@ st.set_page_config(
     page_icon="🎙️",
     layout="wide",
 )
+
+config_file = setup_rclone()
 
 # Hide cookie manager component with CSS
 st.markdown("""
