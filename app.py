@@ -3050,8 +3050,12 @@ with tab7:
 
 # Footer
 st.divider()
-st.markdown("""
-<div style='text-align: center; color: gray; padding: 20px;'>
-    Made with ❤️ for language learners | Powered by Streamlit
-</div>
-""", unsafe_allow_html=True)
+footer_col1, footer_col2, footer_col3 = st.columns([1, 2, 1])
+with footer_col2:
+    st.markdown("""
+    <div style='text-align: center; color: gray; padding: 20px;'>
+        Made with ❤️ for language learners | Powered by Streamlit<br>
+        <a href="/privacy_policy" target="_self" style="color: gray; text-decoration: none;">Privacy Policy</a> | 
+        <a href="/terms_of_service" target="_self" style="color: gray; text-decoration: none;">Terms of Service</a>
+    </div>
+    """, unsafe_allow_html=True)

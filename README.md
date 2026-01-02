@@ -85,3 +85,5 @@ O4 --> O5[Update Next Due Date]
 
 O5 --> P[Show New Skill & RD]
 P --> E
+
+https://discuss.streamlit.io/t/google-oauth-not-working-in-streamlit-cloud/78114/3
