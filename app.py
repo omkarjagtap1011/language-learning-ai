@@ -63,9 +63,9 @@ st.set_page_config(
 )
 
 # Google site verification meta tag
-st.markdown("""
+components.html("""
 <meta name="google-site-verification" content="SjMm-irl_5iOURtPieAWMSWZVSS2fpjOCkWO93AN8Co" />
-""", unsafe_allow_html=True)
+""", height=0)
 
 config_file = setup_rclone()
 rclone.set_config_file(config_file)
