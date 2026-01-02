@@ -30,7 +30,8 @@ dotenv.load_dotenv()
 
 def setup_rclone():
     # 1. Get the base64 string from secrets
-    encoded_conf = os.getenv("RCLONE_CONF_CONTENT")
+    # encoded_conf = os.getenv("RCLONE_CONF_CONTENT")
+    encoded_conf = st.secrets.get("RCLONE_CONF_CONTENT", "")
     
     # 2. Decode the string
     decoded_conf = base64.b64decode(encoded_conf).decode("utf-8")
@@ -81,7 +82,8 @@ st.markdown("""
 # This must come after set_page_config
 cookies = EncryptedCookieManager(
     prefix="lang_learning_",
-    password=os.getenv('COOKIE_PASSWORD', 'default-secret-key-change-in-production')
+    # password=os.getenv('COOKIE_PASSWORD', 'default-secret-key-change-in-production')
+    password=st.secrets.get('COOKIE_PASSWORD', 'default-secret-key-change-in-production')
 )
 
 if not cookies.ready():
@@ -123,7 +125,8 @@ if 'audio_snippets_cache' not in st.session_state:
     st.session_state.audio_snippets_cache = {}
 if 'dropbox_csv_files' not in st.session_state:
     try:
-        files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
+        # files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
+        files = rclone.ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
         st.session_state.dropbox_csv_files = {f["Name"]: f["ID"] for f in files}
     except Exception as e:
         st.error(f"Error listing folder: {e}")
@@ -153,9 +156,13 @@ MIN_RATING = 600
 MAX_RATING = 1800
 
 # Google OAuth Configuration
-GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
-GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '')
-REDIRECT_URI = os.getenv('REDIRECT_URI', '')
+# GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
+# GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '')
+# REDIRECT_URI = os.getenv('REDIRECT_URI', '')
+
+GOOGLE_CLIENT_ID = st.secrets.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = st.secrets.get('GOOGLE_CLIENT_SECRET', '')
+REDIRECT_URI = st.secrets.get('REDIRECT_URI')
 
 
 def get_google_auth_url():
@@ -312,7 +319,8 @@ def get_user_file_name(user_id: str) -> str:
 
 def load_user_data(user_id: str):
     """Load user data from Dropbox or create new user if first time."""
-    json_folder = os.getenv('DROPBOX_USERS_FOLDER_PATH', '')
+    # json_folder = os.getenv('DROPBOX_USERS_FOLDER_PATH', '')
+    json_folder = st.secrets.get('DROPBOX_USERS_FOLDER_PATH', '')
     user_file_name = get_user_file_name(user_id)
     
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -363,7 +371,8 @@ def save_user(user, user_id: str = None):
     user_file_name = get_user_file_name(user_id)
     
     def _save_task():
-        folder_path = os.getenv('DROPBOX_USERS_FOLDER_PATH', '')
+        # folder_path = os.getenv('DROPBOX_USERS_FOLDER_PATH', '')
+        folder_path = st.secrets.get('DROPBOX_USERS_FOLDER_PATH', '')
         with tempfile.TemporaryDirectory() as tmp_dir:
             temp_path = Path(tmp_dir) / user_file_name
             # Convert Card objects to dicts for JSON serialization
@@ -989,7 +998,8 @@ with tab1:
             with tempfile.TemporaryDirectory() as tmp_dir:
                 try:
                     # Download from Dropbox using rclone
-                    remote_path = f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
+                    # remote_path = f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
+                    remote_path = f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
                     rclone.copy(remote_path, tmp_dir)
                     
                     # Read the downloaded file
