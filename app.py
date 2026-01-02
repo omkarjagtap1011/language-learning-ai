@@ -60,6 +60,20 @@ st.set_page_config(
 
 config_file = setup_rclone()
 rclone.set_config_file(config_file)
+remotes = rclone.listremotes()
+
+if remotes:
+    remote_name = remotes[0] # Use the first one found (e.g., 'my-dropbox:')
+    st.success(f"Found remote: {remote_name}")
+    
+    # Try listing
+    try:
+        files = rclone.ls(f"{remote_name}omkar-internship/csv/")
+        st.write(files)
+    except Exception as e:
+        st.error(f"Error: {e}")
+else:
+    st.error("No remotes found in the config file. Check your Base64 string.")
 
 # Hide cookie manager component with CSS
 st.markdown("""
