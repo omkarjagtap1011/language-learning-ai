@@ -60,7 +60,7 @@ st.set_page_config(
 
 config_file = setup_rclone()
 rclone.set_config_file(config_file)
-remotes = rclone.listremotes()
+remotes = rclone.get_remotes()
 
 if remotes:
     remote_name = remotes[0] # Use the first one found (e.g., 'my-dropbox:')
