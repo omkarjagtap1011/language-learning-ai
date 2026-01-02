@@ -39,8 +39,12 @@ def setup_rclone():
     # 3. Path to save the config (Linux /tmp is best for Streamlit Cloud)
     config_path = "/tmp/rclone.conf"
     
-    with open(config_path, "wb") as f:
+    with open(config_path, "w") as f:
         f.write(decoded_conf)
+
+    with open(config_path, "r") as f:
+        content = f.read()
+        print(content)  # For debugging purposes
     
     return config_path
 
