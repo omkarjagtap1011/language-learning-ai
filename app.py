@@ -680,6 +680,8 @@ if not st.session_state.authenticated:
     
     This application analyzes audio recordings to identify sentence difficulty based on readability metrics.
     Sign in with your Google account to access all features.
+    
+    📖 [Learn more about our app](/home) | 🔒 [Privacy Policy](/privacy_policy) | 📜 [Terms of Service](/terms_of_service)
     """)
     
     st.divider()

@@ -21,9 +21,21 @@ Welcome to the Language Learning Difficulty Analyzer. Your privacy is important 
 
 ## 1. Information We Collect
 
-### 1.1 Personal Information
-We may collect personal information that you voluntarily provide when using our service, including:
-- Email address (if you create an account)
+### 1.1 Google Account Information
+When you sign in with Google, we receive and store the following information from your Google account:
+- **Name**: Your display name from your Google profile
+- **Email Address**: Your primary email address associated with your Google account
+- **Profile Picture**: Your Google profile picture URL (optional)
+- **User ID**: A unique identifier for your account
+
+**We do NOT access:**
+- Your Google contacts
+- Your Google Drive files
+- Your Gmail messages
+- Your calendar or any other Google services
+
+### 1.2 Personal Information
+We may collect additional personal information that you voluntarily provide when using our service, including:
 - User preferences and settings
 - Learning progress and performance data
 
