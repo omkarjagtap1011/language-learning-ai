@@ -62,18 +62,6 @@ st.set_page_config(
     layout="wide",
 )
 
-# Google site verification meta tag
-components.html("""
-<script>
-    (function() {
-        var meta = document.createElement('meta');
-        meta.name = 'google-site-verification';
-        meta.content = 'SjMm-irl_5iOURtPieAWMSWZVSS2fpjOCkWO93AN8Co';
-        window.top.document.head.appendChild(meta);
-    })();
-</script>
-""", height=0)
-
 config_file = setup_rclone()
 rclone.set_config_file(config_file)
 
