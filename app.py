@@ -62,6 +62,11 @@ st.set_page_config(
     layout="wide",
 )
 
+# Google site verification meta tag
+st.markdown("""
+<meta name="google-site-verification" content="SjMm-irl_5iOURtPieAWMSWZVSS2fpjOCkWO93AN8Co" />
+""", unsafe_allow_html=True)
+
 config_file = setup_rclone()
 rclone.set_config_file(config_file)
 
