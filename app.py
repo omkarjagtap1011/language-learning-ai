@@ -44,7 +44,7 @@ def setup_rclone():
     
     os.environ["RCLONE_CONFIG"] = config_path
     
-    return config_path
+    return decoded_conf
 
 # # Import your existing modules
 # from segmentation.webrtc_dialogue_segmentation import segment_dialogue
@@ -60,7 +60,7 @@ st.set_page_config(
     layout="wide",
 )
 
-config_file = setup_rclone()
+decoded_conf = setup_rclone()
 
 # Hide cookie manager component with CSS
 st.markdown("""
@@ -126,7 +126,7 @@ if 'audio_snippets_cache' not in st.session_state:
 if 'dropbox_csv_files' not in st.session_state:
     try:
         # files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
-        files = rclone.ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
+        files = rclone.with_config(decoded_conf).ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
         st.session_state.dropbox_csv_files = {f["Name"]: f["ID"] for f in files}
     except Exception as e:
         st.error(f"Error listing folder: {e}")
@@ -327,7 +327,7 @@ def load_user_data(user_id: str):
         try:
             # Download from Dropbox using rclone
             remote_path = f"dropbox:{json_folder}{user_file_name}"
-            rclone.copy(remote_path, tmp_dir)
+            rclone.with_config(decoded_conf).copy(remote_path, tmp_dir)
             
             # Read the downloaded file
             downloaded_file = Path(tmp_dir) / user_file_name
@@ -1000,7 +1000,7 @@ with tab1:
                     # Download from Dropbox using rclone
                     # remote_path = f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
                     remote_path = f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
-                    rclone.copy(remote_path, tmp_dir)
+                    rclone.with_config(decoded_conf).copy(remote_path, tmp_dir)
                     
                     # Read the downloaded file
                     downloaded_file = Path(tmp_dir) / selected_drive_file
