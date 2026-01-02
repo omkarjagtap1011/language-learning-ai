@@ -64,7 +64,14 @@ st.set_page_config(
 
 # Google site verification meta tag
 components.html("""
-<meta name="google-site-verification" content="SjMm-irl_5iOURtPieAWMSWZVSS2fpjOCkWO93AN8Co" />
+<script>
+    (function() {
+        var meta = document.createElement('meta');
+        meta.name = 'google-site-verification';
+        meta.content = 'SjMm-irl_5iOURtPieAWMSWZVSS2fpjOCkWO93AN8Co';
+        window.top.document.head.appendChild(meta);
+    })();
+</script>
 """, height=0)
 
 config_file = setup_rclone()
