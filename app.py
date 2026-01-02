@@ -190,8 +190,8 @@ def get_google_auth_url():
     
     scopes = [
         'openid',
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile'
+        # 'https://www.googleapis.com/auth/userinfo.email',
+        # 'https://www.googleapis.com/auth/userinfo.profile'
     ]
     
     auth_url = (
