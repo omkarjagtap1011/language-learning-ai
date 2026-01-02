@@ -31,7 +31,7 @@ dotenv.load_dotenv()
 def setup_rclone():
     # 1. Get the base64 string from secrets
     # encoded_conf = os.getenv("RCLONE_CONF_CONTENT")
-    encoded_conf = st.secrets.get("RCLONE_CONF_CONTENT", "")
+    encoded_conf = st.secrets.get("RCLONE_CONFIG_CONTENT", "")
     
     # 2. Decode the string
     decoded_conf = base64.b64decode(encoded_conf).decode("utf-8")
