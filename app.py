@@ -13,7 +13,7 @@ import os
 import math
 from textwrap import dedent
 import dotenv
-from rclone_python import rclone
+import subprocess
 import json
 import numpy as np
 from datetime import datetime, timezone
@@ -63,7 +63,7 @@ st.set_page_config(
 )
 
 config_file = setup_rclone()
-rclone.set_config_file(config_file)
+rclone_binary = "./rclone"  # Adjust if rclone is in a different location
 
 # remotes = rclone.get_remotes()
 
@@ -143,8 +143,14 @@ if 'audio_snippets_cache' not in st.session_state:
     st.session_state.audio_snippets_cache = {}
 if 'dropbox_csv_files' not in st.session_state:
     try:
-        files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
+        # files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
         # files = rclone.ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
+        files = subprocess.check_output([
+            rclone_binary, "lsf",
+            f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}",
+            "--config", config_file,
+            "--format", "json"
+        ]).decode("utf-8")
         st.session_state.dropbox_csv_files = {f["Name"]: f["ID"] for f in files}
     except Exception as e:
         st.error(f"Error listing folder: {e}")
@@ -345,7 +351,13 @@ def load_user_data(user_id: str):
         try:
             # Download from Dropbox using rclone
             remote_path = f"dropbox:{json_folder}{user_file_name}"
-            rclone.copy(remote_path, tmp_dir)
+            # rclone.copy(remote_path, tmp_dir)
+            subprocess.run([
+                rclone_binary, "copy",
+                remote_path,
+                tmp_dir,
+                "--config", config_file
+            ], check=True)
             
             # Read the downloaded file
             downloaded_file = Path(tmp_dir) / user_file_name
@@ -406,7 +418,7 @@ def save_user(user, user_id: str = None):
             with open(temp_path, 'w') as f:
                 json.dump(user_serializable, f, indent=4)
             
-            upload_files([temp_path], dropbox_folder=folder_path)
+            upload_files([temp_path], dropbox_folder=folder_path, config_file=config_file, executable=rclone_binary)
     
     # Start the save operation in a background thread
     save_thread = threading.Thread(target=_save_task, daemon=True)
@@ -1281,7 +1293,13 @@ with tab1:
                     # Download from Dropbox using rclone
                     remote_path = f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
                     # remote_path = f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}{selected_drive_file}"
-                    rclone.copy(remote_path, tmp_dir)
+                    # rclone.copy(remote_path, tmp_dir)
+                    subprocess.run([
+                        rclone_binary, "copy",
+                        remote_path,
+                        tmp_dir,
+                        "--config", config_file
+                    ], check=True)
                     
                     # Read the downloaded file
                     downloaded_file = Path(tmp_dir) / selected_drive_file
