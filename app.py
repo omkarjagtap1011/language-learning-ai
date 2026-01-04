@@ -145,13 +145,15 @@ if 'dropbox_csv_files' not in st.session_state:
     try:
         # files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
         # files = rclone.ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
-        files = subprocess.check_output([
+        output = subprocess.check_output([
             rclone_binary,
             "lsjson",
             f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH', '')}",
             "--config", rclone_config
         ]).decode("utf-8")
 
+        files = json.loads(output)
+        
         st.session_state.dropbox_csv_files = {f["Name"]: f["ID"] for f in files}
     except Exception as e:
         st.error(f"Error listing folder: {e}")
