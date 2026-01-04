@@ -62,7 +62,7 @@ st.set_page_config(
     layout="wide",
 )
 
-config_file = setup_rclone()
+rclone_config = setup_rclone()
 rclone_binary = "./rclone"  # Adjust if rclone is in a different location
 
 # remotes = rclone.get_remotes()
@@ -146,9 +146,9 @@ if 'dropbox_csv_files' not in st.session_state:
         # files = rclone.ls(f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}")
         # files = rclone.ls(f"dropbox:{st.secrets.get('DROPBOX_CSV_FOLDER_PATH','')}")
         files = subprocess.check_output([
-            rclone_binary, "lsf",
+            rclone_binary, "ls",
             f"dropbox:{os.getenv('DROPBOX_CSV_FOLDER_PATH','')}",
-            "--config", config_file,
+            "--config", rclone_config,
             "--format", "json"
         ]).decode("utf-8")
         st.session_state.dropbox_csv_files = {f["Name"]: f["ID"] for f in files}
@@ -356,7 +356,7 @@ def load_user_data(user_id: str):
                 rclone_binary, "copy",
                 remote_path,
                 tmp_dir,
-                "--config", config_file
+                "--config", rclone_config
             ], check=True)
             
             # Read the downloaded file
@@ -418,7 +418,7 @@ def save_user(user, user_id: str = None):
             with open(temp_path, 'w') as f:
                 json.dump(user_serializable, f, indent=4)
             
-            upload_files([temp_path], dropbox_folder=folder_path, config_file=config_file, executable=rclone_binary)
+            upload_files([temp_path], dropbox_folder=folder_path, config_file=rclone_config, executable=rclone_binary)
     
     # Start the save operation in a background thread
     save_thread = threading.Thread(target=_save_task, daemon=True)
@@ -1298,7 +1298,7 @@ with tab1:
                         rclone_binary, "copy",
                         remote_path,
                         tmp_dir,
-                        "--config", config_file
+                        "--config", rclone_config
                     ], check=True)
                     
                     # Read the downloaded file
